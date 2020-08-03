@@ -1,0 +1,47 @@
+version: '3'
+services:
+  jobs_service:
+    container_name: grpc_jobs_service
+    image: basharsoft-my-grpc
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - grpc-jobs-service:/var/www/server
+      - grpc-protos:/var/www/protos
+    working_dir: /var/www/server
+    command: composer run-grpc-server --working-dir=/var/www/server
+
+  jobs_client:
+    container_name: grpc_jobs_client
+    image: basharsoft-my-grpc
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - grpc-jobs-client:/var/www/client
+      - grpc-protos:/var/www/protos
+    working_dir: /var/www/client
+
+
+volumes:
+  grpc-protos:
+    driver: local
+    driver_opts:
+      device: /Users/basharsoft/workspace/projects/microservices-grpc/services/protos
+      type: none
+      o: bind
+
+  grpc-jobs-service:
+    driver: local
+    driver_opts:
+      device: /Users/basharsoft/workspace/projects/microservices-grpc/services/server
+      type: none
+      o: bind
+
+  grpc-jobs-client:
+    driver: local
+    driver_opts:
+      device: /Users/basharsoft/workspace/projects/microservices-grpc/services/client
+      type: none
+      o: bind

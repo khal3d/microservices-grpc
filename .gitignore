@@ -1,0 +1,5 @@
+/services/*/gen/*
+.DS_Store
+.idea
+vendor
+!.gitkeep
