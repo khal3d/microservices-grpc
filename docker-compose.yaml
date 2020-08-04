@@ -10,7 +10,10 @@ services:
       - grpc-jobs-service:/var/www/server
       - grpc-protos:/var/www/protos
     working_dir: /var/www/server
-    command: composer run-grpc-server --working-dir=/var/www/server
+    command: >
+      bash -c "composer install
+      && composer spiral-gen-proto
+      && composer run-grpc-server"
 
   jobs_client:
     container_name: grpc_jobs_client
@@ -22,7 +25,10 @@ services:
       - grpc-jobs-client:/var/www/client
       - grpc-protos:/var/www/protos
     working_dir: /var/www/client
-
+    command: >
+      bash -c "composer install
+      && composer gen-proto
+      && tail -f /dev/null"
 
 volumes:
   grpc-protos:
