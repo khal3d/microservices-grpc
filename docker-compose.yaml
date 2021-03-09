@@ -1,7 +1,7 @@
 version: '3'
 services:
-  jobs_service:
-    container_name: grpc_jobs_service
+  jobs_server:
+    container_name: grpc_jobs_server
     image: basharsoft-my-grpc
     build:
       context: ./
@@ -34,20 +34,20 @@ volumes:
   grpc-protos:
     driver: local
     driver_opts:
-      device: /Users/basharsoft/workspace/projects/microservices-grpc/services/protos
+      device: ./services/protos
       type: none
       o: bind
 
   grpc-jobs-service:
     driver: local
     driver_opts:
-      device: /Users/basharsoft/workspace/projects/microservices-grpc/services/server
+      device: ./services/server
       type: none
       o: bind
 
   grpc-jobs-client:
     driver: local
     driver_opts:
-      device: /Users/basharsoft/workspace/projects/microservices-grpc/services/client
+      device: ./services/client
       type: none
       o: bind

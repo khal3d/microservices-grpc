@@ -2,15 +2,21 @@
 
 require "vendor/autoload.php";
 
-$client = new \Service\JobClient('grpc_jobs_service:9001', [
+$client = new \Service\JobClient('grpc_jobs_server:9001', [
     'credentials' => Grpc\ChannelCredentials::createInsecure(),
 ]);
 
 $request = new \Service\JobRequest();
 
-for ($x = 0; $x <= 1000; $x++) {
+for ($x = 0; $x <= 100000; $x++) {
     $request->setJob($x);
 
-    list($reply, $status) = $client->getJobDetails($request)->wait();
-    printf("\n[Time: %d] Reply: %s - Round: %d\n", microtime(true), $reply->getTitle(), $reply->getId());
+    $timeoutMs = 100*1000; // 100ms
+    list($reply, $status) = $client->getJobDetails($request, [], ['timeout' => $timeoutMs])->wait();
+
+    if ($status->code == \Grpc\STATUS_OK) {
+        printf("\n[Time: %d] Reply: %s - Round: %d\n", microtime(true), $reply->getTitle(), $reply->getId());
+    } else {
+        echo $status->details.PHP_EOL;
+    }
 }

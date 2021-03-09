@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "google/protobuf",
-            "version": "v3.12.2",
+            "version": "v3.15.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/protocolbuffers/protobuf-php.git",
-                "reference": "571f9a4ba39826a18611ae568d97b6007954c070"
+                "reference": "c4a8128a7df155fce4faba3087b27dcdfe3ece2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/571f9a4ba39826a18611ae568d97b6007954c070",
-                "reference": "571f9a4ba39826a18611ae568d97b6007954c070",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/c4a8128a7df155fce4faba3087b27dcdfe3ece2e",
+                "reference": "c4a8128a7df155fce4faba3087b27dcdfe3ece2e",
                 "shasum": ""
             },
             "require": {
@@ -45,24 +45,24 @@
             "keywords": [
                 "proto"
             ],
-            "time": "2020-05-27T17:57:58+00:00"
+            "time": "2021-03-05T01:43:13+00:00"
         },
         {
             "name": "grpc/grpc",
-            "version": "1.30.0",
+            "version": "1.36.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/grpc/grpc-php.git",
-                "reference": "31952d18884d91c674b73f8b4da831f708706f20"
+                "reference": "6145dd917d340b579f0b663940b17cc93172b79a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/grpc/grpc-php/zipball/31952d18884d91c674b73f8b4da831f708706f20",
-                "reference": "31952d18884d91c674b73f8b4da831f708706f20",
+                "url": "https://api.github.com/repos/grpc/grpc-php/zipball/6145dd917d340b579f0b663940b17cc93172b79a",
+                "reference": "6145dd917d340b579f0b663940b17cc93172b79a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.0"
+                "php": ">=7.0.0"
             },
             "require-dev": {
                 "google/auth": "^v1.3.0"
@@ -86,7 +86,7 @@
             "keywords": [
                 "rpc"
             ],
-            "time": "2020-06-23T01:49:02+00:00"
+            "time": "2021-03-01T21:52:11+00:00"
         }
     ],
     "packages-dev": [],

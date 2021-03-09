@@ -10,8 +10,9 @@
   },
   "scripts": {
     "spiral-gen-proto": "protoc --php-grpc_out=./gen --php_out=./gen ../protos/service.proto --proto_path=../protos",
-    "gen-proto": "protoc --grpc_out=./gen --php_out=./gen ../protos/service.proto --proto_path=../protos --plugin=protoc-gen-grpc=/root/grpc/bins/opt/grpc_php_plugin",
-    "run-grpc-server": "rr-grpc serve -v -d"
+    "run-grpc-server": "rr-grpc serve -v -d",
+    "grpc-reset": "rr-grpc grpc:reset",
+    "grpc-workers": "rr-grpc grpc:workers -i"
   },
   "config": {
     "process-timeout": 0

@@ -8,15 +8,19 @@ grpc:
     command: "php worker.php"
     pool:
       numWorkers: 4
-
-metrics:
-  address: localhost:2112
+      # Max number of jobs each worker can handle (0 = unlimited)
+      maxJobs: 0
 
 limit:
+  # check worker state each second
   interval: 1
   services:
     grpc:
+      # Maximum allowed memory consumption per worker (soft)
       maxMemory: 100
+      # Maximum time to live for the worker (soft)
       TTL: 0
+      # maximum allowed amount of time worker can spend in idle before being removed (for weak db connections, soft)
       idleTTL: 0
-      execTTL: 60
+      # max_execution_time (brutal)
+      execTTL: 0

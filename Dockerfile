@@ -1,50 +1,42 @@
 FROM grpc/php
 
-RUN apt update -y &&\
-    apt install wget git -y
+RUN apt-get update -y &&\
+    apt-get install -y git zip automake libtool\
+    && apt-get -y autoremove\
+    && apt-get clean\
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*\
+    && php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 
-RUN cd /root \
-    && wget https://golang.org/dl/go1.14.6.linux-amd64.tar.gz \
-    && tar -xvf go1.14.6.linux-amd64.tar.gz \
-    && mv go /usr/local
+# Install GoLang
+RUN curl -s https://dl.google.com/go/go1.15.4.linux-amd64.tar.gz | tar -v -C /usr/local -xz
+ENV PATH $PATH:/usr/local/go/bin
+
+# Install Google gRPC tools (protoc & the php plugin)
+RUN git clone --depth 1 -b v1.30.0 https://github.com/grpc/grpc /root/grpc\
+    && cd /root/grpc\
+    && git submodule update --init\
+    && make grpc_php_plugin\
+    && mv /root/grpc/bins/opt/grpc_php_plugin /usr/local/bin/\
+    && mv /root/grpc/bins/opt/protobuf/protoc /usr/local/bin/\
+    && rm -rf /root/grpc/
+
+# Install Spiral gRPC tools & Roadrunner Server
+RUN git clone --depth 1 -b v1.4.0 https://github.com/spiral/php-grpc.git /root/php-grpc\
+    && /root/php-grpc/build.sh\
+    && mv /root/php-grpc/protoc-gen-php-grpc /usr/local/bin/protoc-gen-php-grpc\
+    && mv /root/php-grpc/rr-grpc /usr/local/bin/rr-grpc\
+    && rm -rf /root/php-grpc/
 
 
-WORKDIR /root
-
-RUN apt install -y zip
-RUN rm -rf go1.14.6.linux-amd64.tar.gz
-
-RUN echo 'export GOROOT=/usr/local/go\n\
-export GOPATH=$HOME/go\n\
-export GOBIN=$GOPATH/bin\n\
-export PATH=$GOPATH/bin:$GOROOT/bin:/root/php-grpc:$PATH\
-' >> .bashrc
-
-RUN git clone https://github.com/spiral/php-grpc.git /root/php-grpc\
-    && cd php-grpc
-
-RUN mkdir ~/go
-RUN mkdir ~/go/bin
-
-
-ENV PATH /root/go/bin:/usr/local/go/bin:/root/php-grpc:$PATH
-RUN ~/php-grpc/build.sh
-
-RUN cd ~\
-    && git clone -b v1.30.0 https://github.com/grpc/grpc\
-    && cd grpc && git submodule update --init
 
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer;
 
 WORKDIR /root/grpc
-RUN apt -y install automake libtool
-RUN make grpc_php_plugin
 
-EXPOSE 9001
-EXPOSE 2112
-
-CMD tail -f /dev/null
+# Removed the Go module cacheing
+RUN go clean -modcache
 
 WORKDIR /var/www/
+EXPOSE 9001
 
 CMD tail -f /dev/null
