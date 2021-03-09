@@ -10,7 +10,6 @@
         }
     },
     "scripts": {
-        "spiral-gen-proto": "protoc --php-grpc_out=./gen --php_out=./gen ../protos/service.proto --proto_path=../protos",
         "gen-proto": "protoc --grpc_out=./gen --php_out=./gen ../protos/service.proto --proto_path=../protos --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin"
     }
   }

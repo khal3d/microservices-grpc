@@ -1,0 +1,49 @@
+FROM php:7.4-fpm
+
+RUN apt-get update -y &&\
+    apt-get install -y git zip cmake zlib1g-dev\
+    && apt-get -y autoremove\
+    && apt-get clean\
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*\
+    && php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
+
+# Install GoLang
+RUN curl -s https://dl.google.com/go/go1.15.8.linux-amd64.tar.gz | tar -v -C /usr/local -xz
+ENV PATH $PATH:/usr/local/go/bin
+
+# Install gRPC & Protobuf php-ext
+RUN pecl install grpc-1.36.0 protobuf-3.14.0\
+    && docker-php-ext-enable grpc protobuf\
+    && pecl clear-cache\
+    && rm -rf /tmp/pear
+
+# Install Google gRPC tools (protoc & the php plugin)
+#
+# This is used to generate the protobuf php classes, and used
+# only during the development/deployment, and can be removed from production if
+# the generated classes becomes a part of your sourcecode (committed on the version control).
+# P.S.: If you removed this, don't forget to remove the GoLang from the previous step ;)
+# P.S.: The automake & libtool packages can be removed too :D
+RUN git clone --recurse-submodules --shallow-submodules --depth 1 -b v1.36.0 https://github.com/grpc/grpc /root/grpc\
+    && mkdir -p /root/grpc/cmake/build\
+    && cd /root/grpc/cmake/build\
+    && cmake ../..\
+    && make protoc grpc_php_plugin\
+    && mv /root/grpc/cmake/build/grpc_php_plugin /usr/local/bin/\
+    && mv /root/grpc/cmake/build/third_party/protobuf/protoc-3.14.0.0 /usr/local/bin/protoc\
+    && rm -rf /root/grpc/
+
+# Install gzh (a gRPC benchmarking and load testing tool)
+# This tool is only for testing, and it's not nessserly on production.
+RUN git clone https://github.com/bojand/ghz /root/ghz\
+    && cd /root/ghz\
+    && make build\
+    && mv /root/ghz/dist/ghz /usr/local/bin/\
+    && mv /root/ghz/dist/ghz-web /usr/local/bin/
+
+# Removed the Go module cacheing
+RUN go clean -modcache
+
+WORKDIR /var/www/
+
+CMD tail -f /dev/null
