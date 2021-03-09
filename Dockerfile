@@ -27,6 +27,12 @@ RUN git clone --depth 1 -b v1.4.0 https://github.com/spiral/php-grpc.git /root/p
     && mv /root/php-grpc/rr-grpc /usr/local/bin/rr-grpc\
     && rm -rf /root/php-grpc/
 
+# Install gzh (a gRPC benchmarking and load testing tool)
+RUN git clone https://github.com/bojand/ghz /root/ghz\
+    && cd /root/ghz\
+    && make build\
+    && mv /root/ghz/dist/ghz /usr/local/bin/\
+    && mv /root/ghz/dist/ghz-web /usr/local/bin/
 
 
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer;
