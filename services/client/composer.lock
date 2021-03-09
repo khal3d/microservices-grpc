@@ -4,49 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f166c7824422fcd75fe798f66aea9e85",
+    "content-hash": "9be52779d3d362cd0fe71d76f614dc5b",
     "packages": [
-        {
-            "name": "google/protobuf",
-            "version": "v3.15.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/protocolbuffers/protobuf-php.git",
-                "reference": "c4a8128a7df155fce4faba3087b27dcdfe3ece2e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/c4a8128a7df155fce4faba3087b27dcdfe3ece2e",
-                "reference": "c4a8128a7df155fce4faba3087b27dcdfe3ece2e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": ">=4.8.0"
-            },
-            "suggest": {
-                "ext-bcmath": "Need to support JSON deserialization"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Google\\Protobuf\\": "src/Google/Protobuf",
-                    "GPBMetadata\\Google\\Protobuf\\": "src/GPBMetadata/Google/Protobuf"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "proto library for PHP",
-            "homepage": "https://developers.google.com/protocol-buffers/",
-            "keywords": [
-                "proto"
-            ],
-            "time": "2021-03-05T01:43:13+00:00"
-        },
         {
             "name": "grpc/grpc",
             "version": "1.36.0",
@@ -86,6 +45,9 @@
             "keywords": [
                 "rpc"
             ],
+            "support": {
+                "source": "https://github.com/grpc/grpc-php/tree/v1.36.0"
+            },
             "time": "2021-03-01T21:52:11+00:00"
         }
     ],
@@ -95,6 +57,9 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": []
+    "platform": {
+        "ext-grpc": "^1.36"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.0.0"
 }

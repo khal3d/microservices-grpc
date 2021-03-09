@@ -1,8 +1,4 @@
 {
-    "require": {
-        "google/protobuf": "^3.12",
-        "grpc/grpc": "^1.30"
-    },
     "autoload": {
         "psr-4": {
             "": "gen",
@@ -11,5 +7,9 @@
     },
     "scripts": {
         "gen-proto": "protoc --grpc_out=./gen --php_out=./gen ../protos/service.proto --proto_path=../protos --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin"
+    },
+    "require": {
+        "ext-grpc": "^1.36",
+        "grpc/grpc": "^1.36"
     }
-  }
+}
