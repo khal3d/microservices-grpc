@@ -5,6 +5,12 @@ services:
     image: my-grpc-server
     build:
       context: ./
+      args:
+        PHP_VERSION: $PHP_VERSION
+        GO_VERSION: $GO_VERSION
+        PROTOBUF_VERSION: $PROTOBUF_VERSION
+        GRPC_VERSION: $GRPC_VERSION
+        ROADRUNNER_VERSION: $ROADRUNNER_VERSION
       dockerfile: Dockerfile-Server
     volumes:
       - grpc-jobs-service:/var/www/server
@@ -20,6 +26,11 @@ services:
     image: my-grpc-client
     build:
       context: ./
+      args:
+        PHP_VERSION: $PHP_VERSION
+        GO_VERSION: $GO_VERSION
+        PROTOBUF_VERSION: $PROTOBUF_VERSION
+        GRPC_VERSION: $GRPC_VERSION
       dockerfile: Dockerfile-Client
     volumes:
       - grpc-jobs-client:/var/www/client

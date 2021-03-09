@@ -1,4 +1,9 @@
-FROM php:7.4-fpm
+ARG PHP_VERSION
+FROM php:${PHP_VERSION}-fpm
+
+ARG GO_VERSION
+ARG GRPC_VERSION
+ARG PROTOBUF_VERSION
 
 RUN apt-get update -y &&\
     apt-get install -y git zip cmake zlib1g-dev\
@@ -8,11 +13,11 @@ RUN apt-get update -y &&\
     && php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 
 # Install GoLang
-RUN curl -s https://dl.google.com/go/go1.15.8.linux-amd64.tar.gz | tar -v -C /usr/local -xz
+RUN curl -s https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz | tar -v -C /usr/local -xz
 ENV PATH $PATH:/usr/local/go/bin
 
 # Install gRPC & Protobuf php-ext
-RUN pecl install grpc-1.36.0 protobuf-3.14.0\
+RUN pecl install grpc-${GRPC_VERSION} protobuf-${PROTOBUF_VERSION}\
     && docker-php-ext-enable grpc protobuf\
     && pecl clear-cache\
     && rm -rf /tmp/pear
@@ -24,25 +29,26 @@ RUN pecl install grpc-1.36.0 protobuf-3.14.0\
 # the generated classes becomes a part of your sourcecode (committed on the version control).
 # P.S.: If you removed this, don't forget to remove the GoLang from the previous step ;)
 # P.S.: The automake & libtool packages can be removed too :D
-RUN git clone --recurse-submodules --shallow-submodules --depth 1 -b v1.36.0 https://github.com/grpc/grpc /root/grpc\
+RUN git clone --recurse-submodules --shallow-submodules --depth 1 -b v${GRPC_VERSION} https://github.com/grpc/grpc /root/grpc\
     && mkdir -p /root/grpc/cmake/build\
     && cd /root/grpc/cmake/build\
     && cmake ../..\
     && make protoc grpc_php_plugin\
     && mv /root/grpc/cmake/build/grpc_php_plugin /usr/local/bin/\
-    && mv /root/grpc/cmake/build/third_party/protobuf/protoc-3.14.0.0 /usr/local/bin/protoc\
+    && mv /root/grpc/cmake/build/third_party/protobuf/protoc-* /usr/local/bin/protoc\
     && rm -rf /root/grpc/
 
 # Install gzh (a gRPC benchmarking and load testing tool)
-# This tool is only for testing, and it's not nessserly on production.
-RUN git clone https://github.com/bojand/ghz /root/ghz\
+# This tool is only for testing, and it's not necessarily on production.
+RUN git clone --depth 1 https://github.com/bojand/ghz /root/ghz\
     && cd /root/ghz\
     && make build\
     && mv /root/ghz/dist/ghz /usr/local/bin/\
     && mv /root/ghz/dist/ghz-web /usr/local/bin/
 
 # Removed the Go module cacheing
-RUN go clean -modcache
+RUN go clean -modcache\
+    && rm -rf /usr/local/go
 
 WORKDIR /var/www/
 
