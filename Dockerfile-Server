@@ -23,6 +23,12 @@ RUN pecl install protobuf-${PROTOBUF_VERSION}\
     && rm -rf /tmp/pear
 
 # Install Google gRPC tools (protoc & the php plugin)
+#
+# This is used to generate the protobuf php classes, and used
+# only during the development/deployment, and can be removed from production if
+# the generated classes becomes a part of your sourcecode (committed on the version control).
+# P.S.: If you removed this, don't forget to remove the GoLang from the previous step ;)
+# P.S.: The cmake package can be removed too :D
 RUN git clone --recurse-submodules --shallow-submodules --depth 1 -b v${GRPC_VERSION} https://github.com/grpc/grpc /root/grpc\
     && mkdir -p /root/grpc/cmake/build\
     && cd /root/grpc/cmake/build\
@@ -33,15 +39,16 @@ RUN git clone --recurse-submodules --shallow-submodules --depth 1 -b v${GRPC_VER
     && rm -rf /root/grpc/
 
 # Install Spiral gRPC tools & Roadrunner Server
-ARG ROADRUNNER_VERSION
-RUN git clone --depth 1 -b v${ROADRUNNER_VERSION} https://github.com/spiral/php-grpc.git /root/php-grpc\
+ARG ROADRUNNER_PHP_GRPC_VERSION
+RUN git clone --depth 1 -b v${ROADRUNNER_PHP_GRPC_VERSION} https://github.com/spiral/php-grpc.git /root/php-grpc\
     && /root/php-grpc/build.sh\
     && mv /root/php-grpc/protoc-gen-php-grpc /usr/local/bin/protoc-gen-php-grpc\
     && mv /root/php-grpc/rr-grpc /usr/local/bin/rr-grpc\
     && rm -rf /root/php-grpc/
 
 # Removed the Go module cacheing
-RUN go clean -modcache
+RUN go clean -modcache\
+    && rm -rf /usr/local/go
 
 WORKDIR /var/www/
 EXPOSE 9001

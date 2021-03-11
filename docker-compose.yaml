@@ -10,7 +10,7 @@ services:
         GO_VERSION: $GO_VERSION
         PROTOBUF_VERSION: $PROTOBUF_VERSION
         GRPC_VERSION: $GRPC_VERSION
-        ROADRUNNER_VERSION: $ROADRUNNER_VERSION
+        ROADRUNNER_PHP_GRPC_VERSION: $ROADRUNNER_PHP_GRPC_VERSION
       dockerfile: Dockerfile-Server
     volumes:
       - grpc-jobs-service:/var/www/server

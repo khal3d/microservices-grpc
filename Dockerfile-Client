@@ -28,7 +28,7 @@ RUN pecl install grpc-${GRPC_VERSION} protobuf-${PROTOBUF_VERSION}\
 # only during the development/deployment, and can be removed from production if
 # the generated classes becomes a part of your sourcecode (committed on the version control).
 # P.S.: If you removed this, don't forget to remove the GoLang from the previous step ;)
-# P.S.: The automake & libtool packages can be removed too :D
+# P.S.: The cmake package can be removed too :D
 RUN git clone --recurse-submodules --shallow-submodules --depth 1 -b v${GRPC_VERSION} https://github.com/grpc/grpc /root/grpc\
     && mkdir -p /root/grpc/cmake/build\
     && cd /root/grpc/cmake/build\
