@@ -10,5 +10,5 @@ require "vendor/autoload.php";
 $server = new \Spiral\GRPC\Server();
 $server->registerService(\Service\JobInterface::class, new \App\JobService());
 
-$w = new RoadRunner\Worker(new Goridge\StreamRelay(STDIN, STDOUT));
-$server->serve($w);
+$worker = new RoadRunner\Worker(new Goridge\StreamRelay(STDIN, STDOUT));
+$server->serve($worker);
